@@ -1,4 +1,4 @@
-const CACHE_NAME = 'painel-ferias-pwa-v4';
+const CACHE_NAME = 'painel-ferias-pwa-v5';
 const STATIC_ASSETS = [
   './',
   './index.html',
