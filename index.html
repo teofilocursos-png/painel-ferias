@@ -15,7 +15,18 @@
       .efetivo-card { background: #ffffff; border: 1px solid var(--panel-border); border-left: 5px solid var(--green); border-radius: 6px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(25, 51, 43, 0.06); }
       .efetivo-card-valor { font-size: 26px; font-weight: 800; color: var(--ink); }
       .efetivo-card-rotulo { font-size: 12.5px; color: var(--muted); font-weight: 600; }
-      .efetivo-grafico { position: relative; height: 340px; }
+      .efetivo-graficos-grid { display: grid; grid-template-columns: minmax(240px, 0.9fr) minmax(320px, 1.3fr) minmax(190px, 0.6fr); gap: 14px; align-items: stretch; margin-bottom: 14px; }
+      .efetivo-bloco { background: #ffffff; border: 1px solid var(--panel-border); border-radius: 6px; padding: 10px 12px; min-width: 0; }
+      .efetivo-bloco h4 { margin: 0 0 8px; font-size: 14px; color: var(--ink); }
+      .efetivo-grafico { position: relative; height: 300px; }
+      .efetivo-operadores-scroll { max-height: 300px; overflow-y: auto; }
+      .efetivo-operadores { width: 100%; border-collapse: collapse; font-size: 13px; }
+      .efetivo-operadores th, .efetivo-operadores td { padding: 5px 6px; border-bottom: 1px solid #e5ece8; text-align: left; }
+      .efetivo-operadores thead th { background: #2e7d5b; color: #ffffff; position: sticky; top: 0; }
+      .secao-divisor { display: flex; align-items: center; gap: 12px; margin: 22px 0 14px; font-size: 12px; font-weight: 700; color: var(--green-dark); text-transform: uppercase; letter-spacing: 0.05em; }
+      .secao-divisor::before, .secao-divisor::after { content: ""; flex: 1; height: 2px; background: linear-gradient(90deg, var(--green), #cbd8d1); }
+      .secao-divisor::after { background: linear-gradient(90deg, #cbd8d1, var(--green)); }
+      @media (max-width: 1100px) { .efetivo-graficos-grid { grid-template-columns: 1fr; } }
       .efetivo-tabela td[rowspan] { background: #e9f5ee; font-weight: 600; }
       .efetivo-tabela tr.efetivo-fds td[rowspan] { background: #cfe3ff; }
       .efetivo-tabela tr.efetivo-vermelho td:not([rowspan]) { background: #dc2626; color: #ffffff; }
@@ -39,9 +50,20 @@
       }
 
       .calendar-horizontal-scrollbar {       position: fixed;       left: 0;       right: 0;       bottom: 0;       height: 18px;       overflow-x: scroll;       overflow-y: hidden;       margin: 0;       border: 1px solid #b8cbc0;       background: #eef4f0;       scrollbar-gutter: stable;       z-index: 9000;     }      .calendar-horizontal-scrollbar > div { height: 1px; }      /* TABELA DE ESTATÍSTICAS E MAPA DE CALOR */     .stats-wrap { overflow: auto; }      table.std-table {       width: 100%;       border-collapse: collapse;       min-width: 850px;       background: #ffffff;     }      table.std-table th {       background: var(--green);       color: #ffffff;       padding: 9px 8px;       border-bottom: 1px solid #e2e9e5;       text-align: center;     }      table.std-table td {       padding: 9px 8px;       border-bottom: 1px solid #e2e9e5;       text-align: center;     }      table.std-table td.name {       text-align: left;       white-space: nowrap;       font-weight: 600;     }      .heat-1 { background: #dcfce7; }     .heat-2 { background: #bae6fd; }     .heat-3 { background: #fde68a; }     .heat-4 { background: #fdba74; }     .heat-5 { background: #fca5a5; font-weight: 700; }      .summary {       display: flex;       gap: 12px;       flex-wrap: wrap;       margin: 12px 0 18px;     }      .summary div {       padding: 12px 16px;       background: #eef7f1;       border-left: 4px solid var(--green);     }      .legenda-estatisticas { margin: 0 0 14px; padding: 12px 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; line-height: 1.5; color: var(--ink); } .legenda-estatisticas ul { margin: 6px 0 0 18px; padding: 0; } .legenda-chips { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 8px; } .legenda-chips span { padding: 2px 8px; border-radius: 4px; font-size: 12px; } .incons-lista { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; max-height: 260px; overflow-y: auto; } .incons-item { text-align: left; padding: 8px 10px; border: 1px solid #fca5a5; border-left: 4px solid #dc2626; background: #fff5f5; border-radius: 6px; cursor: pointer; font-size: 13px; } .incons-item:hover { background: #fee2e2; }
-    .incons-janela { grid-column: 1 / -1; margin: 0 0 12px; padding: 10px 12px; border: 1px solid #bfdbfe; border-radius: 8px; background: #f8fbff; }
-    .incons-mes + .incons-mes { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #bfdbfe; }
-    .incons-mes-titulo { font-weight: 700; margin-bottom: 4px; }
+    .cal-com-central { display: flex; gap: 16px; align-items: flex-start; }
+        .cal-com-central > #calendar { flex: 1 1 0; min-width: 0; }
+        .central-inconsistencias { flex: 0 0 320px; position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; background: #ffffff; border: 1px solid #bfdbfe; border-top: 4px solid #2563eb; border-radius: 8px; padding: 12px; box-shadow: 0 2px 6px rgba(25, 51, 43, 0.08); }
+        .central-cabecalho { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px; }
+        .central-cabecalho h3 { margin: 0; font-size: 16px; }
+        .central-mes { border-top: 1px dashed #bfdbfe; padding-top: 10px; margin-top: 10px; }
+        .central-mes-titulo { font-weight: 700; margin-bottom: 4px; }
+        .central-inconsistencias .incons-item { display: block; width: 100%; text-align: left; font-weight: 400; color: var(--ink); background: #f8fbff; border: 1px solid #dbeafe; border-radius: 6px; padding: 6px 8px; margin-top: 6px; cursor: pointer; }
+        .central-inconsistencias .incons-item:hover { background: #eef6ff; }
+        .dia-foco { outline: 3px solid #2563eb; outline-offset: -3px; }
+        @media (max-width: 900px) {
+          .cal-com-central { flex-direction: column; }
+          .central-inconsistencias { position: static; flex: none; width: 100%; max-height: none; }
+        }
     .incons-slot:empty { display: block; }
     .incons-sugestao { margin: 4px 0; padding: 6px 8px; border-left: 4px solid #2563eb; background: #eff6ff; border-radius: 6px; font-size: 13px; }
     .legenda-sugestao-inconsistencia { margin: 0 0 12px; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; font-size: 13px; }
@@ -170,8 +192,19 @@
 <button type="button" class="main-tab" data-main="eventMainPanel" onclick="alternarAbaPrincipal('eventMainPanel')">
   📝 Eventos
 </button>
-  </nav>    <div style="padding: 12px 20px 0;">     <div id="globalBanner" class="notice-banner show">       <span id="globalBannerText">⏳ Carregando dados da planilha Google Sheets...</span>       <button type="button" onclick="fecharBannerGlobal()" style="padding:2px 8px;">✕</button>     </div>   </div>    <!-- ======================================================================        PAINEL 1: CALENDÁRIO E ESTATÍSTICAS        ====================================================================== -->   <section id="calendarMainPanel" class="main-panel active">     <nav class="sub-tabs">       <button type="button" class="sub-tab active" id="subTabBtnCal" onclick="alternarSubAbaCalendario('cal')">Calendário</button>       <button type="button" class="sub-tab" id="subTabBtnEfetivo" onclick="alternarSubAbaCalendario('efetivo')">Escala de Efetivo</button>       <button type="button" class="sub-tab" id="subTabBtnAnual" onclick="alternarSubAbaCalendario('anual')">Escala Anual</button>       <button type="button" class="sub-tab" id="subTabBtnStats" onclick="alternarSubAbaCalendario('stats')">Estatísticas</button>     </nav>      <!-- Subpainel 1A: Calendário FullCalendar -->     <div id="subPanelCalendar" class="box-panel active"><div class="legenda-sugestao-inconsistencia"><b>Inconsistências e sugestão de resolução</b> <span id="lblInconsistencias" class="muted"></span><ul><li><span class="swatch-inconsistencia"></span><b>Inconsistência:</b> férias fora das regras (R1 a R4). Ela aparece acima do par de meses (Jan/Fev, Mar/Abr...) em que a férias começa. Só aparece nos pares com inconsistência.</li><li><b>R1:</b> início das férias cai em dia que não é de trabalho do grupo. <b>R2:</b> operador 12H com sobreposição de férias no mesmo grupo. <b>R3:</b> sobreposição com férias de outro supervisor. <b>R4:</b> 2 ou mais operadores 12H de férias no mesmo dia.</li><li><span class="swatch-sugestao"></span><b>Sugestão de remarcação:</b> se algum envolvido tirou férias nesse mesmo período no ano anterior, ele é sugerido. Se ninguém tirou, sugere-se quem tem mais férias neste mês nas Estatísticas.</li></ul></div>       <div class="filters">         <label>Funcionário           <select id="calFilterEmployee" onchange="atualizarEventosCalendario()">             <option value="">Todos</option>           </select>         </label>         <label>Grupo           <select id="calFilterGroup" onchange="atualizarEventosCalendario()">             <option value="">Todos</option>           </select>         </label>         <label>Evento           <select id="calFilterType" onchange="atualizarEventosCalendario()">             <option value="">Todos</option>             <option value="Férias">Férias</option>             <option value="GPI">GPI</option>             <option value="Treinamento">Treinamento</option>             <option value="Serviço">Serviço</option>             <option value="Licença">Licença</option>
-              <option value="Débito">Débito</option>           </select>         </label>         <label>Status das férias / Situação           <select id="calFilterStatus" onchange="atualizarEventosCalendario()">             <option value="ATIVOS">Planejadas + Confirmadas</option>             <option value="Planejada">Somente Planejadas (Opção 1, 2, 3)</option>             <option value="Confirmada">Somente Confirmadas (Consolidadas)</option>             <option value="Cancelada">Somente Canceladas</option>             <option value="">Todas</option>           </select>         </label>         <label>Inconsistências (regras desligadas)<select id="calFilterInconsistency" onchange="atualizarEventosCalendario()"><option value="">Todas as férias</option><option value="COM">Somente com inconsistências</option></select></label><label>Ir para o Ano           <select id="calFilterYear" onchange="irParaAnoCalendario(this.value)"></select>         </label>         <button type="button" onclick="limparFiltrosCalendario()">Limpar filtros</button>       </div>        <div id="inconsFallback" style="display:none;margin-bottom:12px;"></div><div id="calendar"></div>     </div>      <!-- Subpainel 1B: Matriz de Estatísticas (Heatmap) -->     <div id="subPanelStats" class="box-panel"><div class="legenda-estatisticas"><b>Como ler esta página</b><ul><li><b>Linhas:</b> operadores dos turnos 12H (Grupos A a E).</li><li><b>Colunas:</b> mês em que cada período de férias <b>começa</b>, somando todos os anos.</li><li><b>Números:</b> quantidade de períodos de férias que começam naquele mês. Cada período conta uma vez, mesmo que dure vários dias.</li><li><b>Situações:</b> férias Planejadas e Confirmadas são contadas. Canceladas não entram na contagem.</li><li><b>Total:</b> soma por operador (coluna Total) e por mês (linha Total).</li></ul><div class="legenda-chips"><span>Intensidade:</span><span class="heat-1">1 período</span><span class="heat-2">2</span><span class="heat-3">3</span><span class="heat-4">4</span><span class="heat-5">5 ou mais</span></div></div>              <div id="statsSummary" class="summary"></div>       <div id="statsTable" class="stats-wrap"></div>     </div>    <!-- ======================================================================        PAINEL 2: ESCALA ANUAL        ====================================================================== -->   <section id="annualSubPanel" class="sub-panel" style="display:none">     <div class="box-panel active">       <div class="filters">         <label>Ano           <select id="escFilterYear" onchange="aoMudarAnoEscala(this.value)"></select>         </label>         <label>Funcionário           <select id="escFilterEmployee" onchange="atualizarEscalaAnual()">             <option value="">Todos</option>           </select>         </label>         <label>Grupo / Escala           <select id="escFilterGroup" onchange="atualizarEscalaAnual()">             <option value="">Todos</option>           </select>         </label>         <label>Inspecionar Data           <input type="date" id="escDateInput" onchange="renderizarEscalaDoDia(this.value)">         </label>         <button type="button" onclick="limparFiltrosEscala()">Limpar filtros</button>       </div>        <div id="annualCalendar"></div>        <section id="dayPanel" class="day-panel">         <h2 id="dayTitle">Escala do Dia</h2>         <div id="dayRows"></div>       </section>     </div>   </section>    <!-- ======================================================================        PAINEL 3: NOVO EVENTO + PAINEL LATERAL "PENDÊNCIAS FÉRIAS" + TABELA        ====================================================================== -->   <!-- PAINEL ESCALA DE EFETIVO: somente leitura, montado a partir da escala dos grupos e dos eventos cadastrados -->
+  </nav>    <div style="padding: 12px 20px 0;">     <div id="globalBanner" class="notice-banner show">       <span id="globalBannerText">⏳ Carregando dados da planilha Google Sheets...</span>       <button type="button" onclick="fecharBannerGlobal()" style="padding:2px 8px;">✕</button>     </div>   </div>    <!-- ======================================================================        PAINEL 1: CALENDÁRIO E ESTATÍSTICAS        ====================================================================== -->   <section id="calendarMainPanel" class="main-panel active">     <nav class="sub-tabs">       <button type="button" class="sub-tab active" id="subTabBtnCal" onclick="alternarSubAbaCalendario('cal')">Calendário</button>       <button type="button" class="sub-tab" id="subTabBtnEfetivo" onclick="alternarSubAbaCalendario('efetivo')">Escala de Efetivo</button>       <button type="button" class="sub-tab" id="subTabBtnAnual" onclick="alternarSubAbaCalendario('anual')">Escala Anual</button>       <button type="button" class="sub-tab" id="subTabBtnStats" onclick="alternarSubAbaCalendario('stats')">Estatísticas</button>     </nav>      <!-- Subpainel 1A: Calendário FullCalendar -->     <div id="subPanelCalendar" class="box-panel active"><div class="secao-divisor"><span>Legenda</span></div><div class="legenda-sugestao-inconsistencia"><b>Inconsistências e sugestão de resolução</b><ul><li><span class="swatch-inconsistencia"></span><b>Inconsistência:</b> férias fora das regras (R1 a R4). Elas aparecem na Central das Inconsistências, à direita do calendário, em ordem de data. Clique em uma delas para ir ao mês que a originou.</li><li><b>R1:</b> início das férias cai em dia que não é de trabalho do grupo. <b>R2:</b> operador 12H com sobreposição de férias no mesmo grupo. <b>R3:</b> sobreposição com férias de outro supervisor. <b>R4:</b> 2 ou mais operadores 12H de férias no mesmo dia.</li><li><span class="swatch-sugestao"></span><b>Sugestão de remarcação:</b> se algum envolvido tirou férias nesse mesmo período no ano anterior, ele é sugerido. Se ninguém tirou, sugere-se quem tem mais férias neste mês nas Estatísticas.</li></ul></div>       <div class="filters">         <label>Funcionário           <select id="calFilterEmployee" onchange="atualizarEventosCalendario()">             <option value="">Todos</option>           </select>         </label>         <label>Grupo           <select id="calFilterGroup" onchange="atualizarEventosCalendario()">             <option value="">Todos</option>           </select>         </label>         <label>Evento           <select id="calFilterType" onchange="atualizarEventosCalendario()">             <option value="">Todos</option>             <option value="Férias">Férias</option>             <option value="GPI">GPI</option>             <option value="Treinamento">Treinamento</option>             <option value="Serviço">Serviço</option>             <option value="Licença">Licença</option>
+              <option value="Débito">Débito</option>           </select>         </label>         <label>Status das férias / Situação           <select id="calFilterStatus" onchange="atualizarEventosCalendario()">             <option value="ATIVOS">Planejadas + Confirmadas</option>             <option value="Planejada">Somente Planejadas (Opção 1, 2, 3)</option>             <option value="Confirmada">Somente Confirmadas (Consolidadas)</option>             <option value="Cancelada">Somente Canceladas</option>             <option value="">Todas</option>           </select>         </label>         <label>Inconsistências (regras desligadas)<select id="calFilterInconsistency" onchange="atualizarEventosCalendario()"><option value="">Todas as férias</option><option value="COM">Somente com inconsistências</option></select></label><label>Ir para o Ano           <select id="calFilterYear" onchange="irParaAnoCalendario(this.value)"></select>         </label>         <button type="button" onclick="limparFiltrosCalendario()">Limpar filtros</button>       </div>        <div class="secao-divisor"><span>Calendário e central de inconsistências</span></div>
+        <div class="cal-com-central">
+          <div id="calendar"></div>
+          <aside class="central-inconsistencias" aria-labelledby="tituloCentralInconsistencias">
+            <div class="central-cabecalho">
+              <h3 id="tituloCentralInconsistencias">🧭 Central das Inconsistências</h3>
+              <span id="lblInconsistencias" class="muted"></span>
+            </div>
+            <p class="muted" style="margin:6px 0 0;">Em ordem crescente de data. Clique em uma inconsistência para ir ao mês que a originou.</p>
+            <div id="centralInconsistenciasLista"></div>
+          </aside>
+        </div>     </div>      <!-- Subpainel 1B: Matriz de Estatísticas (Heatmap) -->     <div id="subPanelStats" class="box-panel"><div class="legenda-estatisticas"><b>Como ler esta página</b><ul><li><b>Linhas:</b> operadores dos turnos 12H (Grupos A a E).</li><li><b>Colunas:</b> mês em que cada período de férias <b>começa</b>, somando todos os anos.</li><li><b>Números:</b> quantidade de períodos de férias que começam naquele mês. Cada período conta uma vez, mesmo que dure vários dias.</li><li><b>Situações:</b> férias Planejadas e Confirmadas são contadas. Canceladas não entram na contagem.</li><li><b>Total:</b> soma por operador (coluna Total) e por mês (linha Total).</li></ul><div class="legenda-chips"><span>Intensidade:</span><span class="heat-1">1 período</span><span class="heat-2">2</span><span class="heat-3">3</span><span class="heat-4">4</span><span class="heat-5">5 ou mais</span></div></div>              <div id="statsSummary" class="summary"></div>       <div id="statsTable" class="stats-wrap"></div>     </div>    <!-- ======================================================================        PAINEL 2: ESCALA ANUAL        ====================================================================== -->   <section id="annualSubPanel" class="sub-panel" style="display:none">     <div class="box-panel active">       <div class="filters">         <label>Ano           <select id="escFilterYear" onchange="aoMudarAnoEscala(this.value)"></select>         </label>         <label>Funcionário           <select id="escFilterEmployee" onchange="atualizarEscalaAnual()">             <option value="">Todos</option>           </select>         </label>         <label>Grupo / Escala           <select id="escFilterGroup" onchange="atualizarEscalaAnual()">             <option value="">Todos</option>           </select>         </label>         <label>Inspecionar Data           <input type="date" id="escDateInput" onchange="renderizarEscalaDoDia(this.value)">         </label>         <button type="button" onclick="limparFiltrosEscala()">Limpar filtros</button>       </div>        <div id="annualCalendar"></div>        <section id="dayPanel" class="day-panel">         <h2 id="dayTitle">Escala do Dia</h2>         <div id="dayRows"></div>       </section>     </div>   </section>    <!-- ======================================================================        PAINEL 3: NOVO EVENTO + PAINEL LATERAL "PENDÊNCIAS FÉRIAS" + TABELA        ====================================================================== -->   <!-- PAINEL ESCALA DE EFETIVO: somente leitura, montado a partir da escala dos grupos e dos eventos cadastrados -->
   <section id="efetivoSubPanel" class="sub-panel" style="display:none">
     <div class="box-panel active">
       <div class="filters">
@@ -181,6 +214,7 @@
       </div>
 
       <div class="no-print" style="margin-bottom:8px;"><button type="button" class="primary" onclick="exportarEscalaEfetivoPDF()">📄 Exportar PDF</button></div>
+      <div class="secao-divisor no-print"><span>Painel de indicadores</span></div>
       <section class="no-print efetivo-painel" aria-label="Painel de indicadores do efetivo">
         <div class="efetivo-painel-cabecalho">
           <div>
@@ -204,10 +238,30 @@
           </ul>
         </div>
         <div id="efetivoCards" class="efetivo-cards"></div>
-        <div class="efetivo-grafico"><canvas id="efetivoChart"></canvas></div>
+        <div class="efetivo-graficos-grid">
+          <div class="efetivo-bloco">
+            <h4>Dias por tipo de evento</h4>
+            <div class="efetivo-grafico"><canvas id="efetivoChart"></canvas></div>
+          </div>
+          <div class="efetivo-bloco">
+            <h4>Hora Extras (em dias)</h4>
+            <div class="efetivo-grafico"><canvas id="horasExtrasChart"></canvas></div>
+            <p class="muted" style="margin:6px 0 0;">Dias de Treinamento e Serviço de cada operador no mês selecionado.</p>
+          </div>
+          <div class="efetivo-bloco">
+            <h4>Operadores do turno</h4>
+            <div class="efetivo-operadores-scroll">
+              <table class="efetivo-operadores">
+                <thead><tr><th>Operador</th><th>Grupo</th></tr></thead>
+                <tbody id="efetivoOperadoresTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <p id="efetivoChartAviso" class="muted"></p>
         <p class="muted" style="margin:6px 0 0;">Passe o mouse sobre as barras para ver os valores. Na visão de evolução, clique em um item da legenda para ocultar ou mostrar essa série.</p>
       </section>
+      <div class="secao-divisor"><span>Controle de efetivo</span></div>
       <div id="efetivoTitulo" style="font-weight:700;margin:8px 0 4px;"></div>
 
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin:8px 0;">
@@ -792,6 +846,7 @@
       { chave: 'treinamento', rotulo: 'Dias em treinamento', cor: '#f59e0b' }
     ];
     var efetivoChartInstance = null;
+    var horasExtrasChartInstance = null;
 
     function isoParaUTC_(iso) {
       var p = iso.split('-');
@@ -879,7 +934,8 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } }
+            indexAxis: 'y',
+            scales: { x: { stacked: true, beginAtZero: true, ticks: { precision: 0 } }, y: { stacked: true } }
           }
         };
       } else {
@@ -892,12 +948,71 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            indexAxis: 'y',
             plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+            scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
           }
         };
       }
       efetivoChartInstance = new Chart(canvas, configuracao);
+    }
+
+    function operadoresTurnoEfetivo() {
+      var supervisores = Object.keys(SUPERVISOR_POR_GRUPO).map(function(g) { return SUPERVISOR_POR_GRUPO[g]; });
+      return (STATE.funcionarios || []).filter(function(f) {
+        return /^Grupo [A-E]$/i.test(f.Grupo || '') && supervisores.indexOf(f.FuncionarioID) === -1;
+      }).sort(function(a, b) {
+        return (a.Grupo || '').localeCompare(b.Grupo || '', 'pt-BR') || (a.Nome || '').localeCompare(b.Nome || '', 'pt-BR');
+      });
+    }
+
+    function horasExtrasDoMes(ano, mes) {
+      var mm = String(mes).padStart(2, '0');
+      var ini = isoParaUTC_(ano + '-' + mm + '-01');
+      var fim = isoParaUTC_(ano + '-' + mm + '-' + String(new Date(ano, mes, 0).getDate()).padStart(2, '0'));
+      var mapa = {};
+      (STATE.eventos || []).forEach(function(ev) {
+        if (ev.Situacao === 'Cancelada' || !ev.DataInicioISO || !ev.DataFimISO) return;
+        if (ev.TipoEvento !== 'Serviço' && ev.TipoEvento !== 'Treinamento') return;
+        var a = Math.max(isoParaUTC_(ev.DataInicioISO), ini);
+        var b = Math.min(isoParaUTC_(ev.DataFimISO), fim);
+        if (b < a) return;
+        var id = ev.FuncionarioID;
+        if (!mapa[id]) mapa[id] = { servico: 0, treinamento: 0 };
+        mapa[id][ev.TipoEvento === 'Serviço' ? 'servico' : 'treinamento'] += Math.round((b - a) / 86400000) + 1;
+      });
+      return mapa;
+    }
+
+    function renderizarHorasExtrasEfetivo(ano, mes) {
+      var operadores = operadoresTurnoEfetivo();
+      var dias = horasExtrasDoMes(ano, mes);
+      var tbody = document.getElementById('efetivoOperadoresTbody');
+      if (tbody) {
+        tbody.innerHTML = operadores.length
+          ? operadores.map(function(f) { return '<tr><td>' + esc(primeiroNomeEfetivo(f.Nome)) + '</td><td>' + esc(f.Grupo) + '</td></tr>'; }).join('')
+          : '<tr><td colspan="2" class="muted">Nenhum operador cadastrado.</td></tr>';
+      }
+      var canvas = document.getElementById('horasExtrasChart');
+      if (!canvas) return;
+      if (horasExtrasChartInstance) { horasExtrasChartInstance.destroy(); horasExtrasChartInstance = null; }
+      if (typeof Chart === 'undefined') return;
+      horasExtrasChartInstance = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: operadores.map(function(f) { return primeiroNomeEfetivo(f.Nome); }),
+          datasets: [
+            { label: 'Treinamento', data: operadores.map(function(f) { return (dias[f.FuncionarioID] || {}).treinamento || 0; }), backgroundColor: '#f59e0b' },
+            { label: 'Serviço', data: operadores.map(function(f) { return (dias[f.FuncionarioID] || {}).servico || 0; }), backgroundColor: '#16a34a' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } }
+        }
+      });
     }
 
     function renderizarTabelaDebitoEfetivo() {
@@ -947,6 +1062,7 @@
       }
       document.getElementById('efetivoTbody').innerHTML = html.join('');
       renderizarPainelEfetivo();
+      renderizarHorasExtrasEfetivo(ano, mes);
       renderizarTabelaDebitoEfetivo();
     }
 
@@ -1007,40 +1123,32 @@
       var porMes = {};
       lista.forEach(function(ev) { var k = ev.DataInicioISO.slice(0, 7); (porMes[k] = porMes[k] || []).push(ev); });
 
-      var renderItem = function(ev) { var func = STATE.mapaFunc[ev.FuncionarioID]; var nome = func ? func.Nome : ev.FuncionarioID; var grupo = func ? func.Grupo : ''; return '<button type="button" class="incons-item" onclick="abrirModalDetalhesEvento(\'' + esc(ev.EventoID) + '\')">' + '<b>' + esc(nome) + '</b> <span class="muted">(' + esc(grupo) + ') · ' + esc(ev.DataInicioBR) + ' a ' + esc(ev.DataFimBR) + ' · ' + esc(ev.Situacao) + '</span>' + mapa[ev.EventoID].map(function(i) { return '<div><span class="pendencia-group-tag">' + esc(i.regra) + '</span> ' + esc(i.texto) + '</div>'; }).join('') + '</button>'; };
+      var renderItem = function(ev) { var func = STATE.mapaFunc[ev.FuncionarioID]; var nome = func ? func.Nome : ev.FuncionarioID; var grupo = func ? func.Grupo : ''; return '<button type="button" class="incons-item" onclick="irParaInconsistencia(\'' + esc(ev.DataInicioISO) + '\')">' + '<b>' + esc(nome) + '</b> <span class="muted">(' + esc(grupo) + ') · ' + esc(ev.DataInicioBR) + ' a ' + esc(ev.DataFimBR) + ' · ' + esc(ev.Situacao) + '</span>' + mapa[ev.EventoID].map(function(i) { return '<div><span class="pendencia-group-tag">' + esc(i.regra) + '</span> ' + esc(i.texto) + '</div>'; }).join('') + '</button>'; };
 
-      var montarJanela = function(chaves) {
-        return chaves.filter(function(c) { return c && porMes[c] && porMes[c].length; }).map(function(c) {
+      var central = document.getElementById('centralInconsistenciasLista');
+      var chavesOrdenadas = Object.keys(porMes).sort();
+      if (!chavesOrdenadas.length) {
+        central.innerHTML = '<p class="muted">Nenhuma inconsistência encontrada.</p>';
+      } else {
+        central.innerHTML = chavesOrdenadas.map(function(c) {
           var evs = porMes[c];
           var sug = sugerirRemarcacaoInconsistencia(c, evs);
-          return '<div class="incons-mes"><div class="incons-mes-titulo">' + esc(c.slice(5, 7) + '/' + c.slice(0, 4)) + '</div>' +
+          return '<div class="central-mes"><div class="central-mes-titulo">' + esc(c.slice(5, 7) + '/' + c.slice(0, 4)) + ' · ' + evs.length + ' férias</div>' +
             '<div class="incons-sugestao"><b>Sugestão:</b> remarcar <b>' + esc(sug.nome) + '</b> — ' + esc(sug.motivo) + '</div>' + evs.map(renderItem).join('') + '</div>';
         }).join('');
-      };
-
-      document.querySelectorAll('#calendar .incons-janela').forEach(function(j) { j.remove(); });
-      var meses = Array.prototype.slice.call(document.querySelectorAll('#calendar .fc-multimonth-month'));
-      var chaveDoMes = function(m) {
-        var dia = m.querySelector('.fc-daygrid-day[data-date]:not(.fc-day-other)') || m.querySelector('.fc-daygrid-day[data-date]');
-        return dia ? dia.getAttribute('data-date').slice(0, 7) : '';
-      };
-      var fallback = document.getElementById('inconsFallback');
-      if (meses.length) {
-        for (var i = 0; i < meses.length; i += 2) {
-          var html = montarJanela([chaveDoMes(meses[i]), meses[i + 1] ? chaveDoMes(meses[i + 1]) : '']);
-          if (!html) continue;
-          var janela = document.createElement('div');
-          janela.className = 'incons-janela';
-          janela.innerHTML = html;
-          meses[i].parentNode.insertBefore(janela, meses[i]);
-        }
-        fallback.style.display = 'none';
-        fallback.innerHTML = '';
-      } else {
-        var chavesOrdenadas = Object.keys(porMes).sort();
-        fallback.style.display = chavesOrdenadas.length ? 'block' : 'none';
-        fallback.innerHTML = chavesOrdenadas.map(function(c) { return '<div class="incons-janela">' + montarJanela([c]) + '</div>'; }).join('');
       }
+    }
+
+    function irParaInconsistencia(dataISO) {
+      if (!mainCalendar) return;
+      mainCalendar.gotoDate(dataISO.slice(0, 7) + '-01');
+      setTimeout(function() {
+        var alvo = document.querySelector('#calendar .fc-daygrid-day[data-date="' + dataISO + '"]');
+        if (!alvo) return;
+        alvo.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+        alvo.classList.add('dia-foco');
+        setTimeout(function() { alvo.classList.remove('dia-foco'); }, 2500);
+      }, 150);
     } function atualizarEventosCalendario() {       if (!mainCalendar) return;       mainCalendar.removeAllEvents();       mainCalendar.addEventSource(obterEventosFormatadosFullCalendar());
       mainCalendar.addEventSource(obterEventosEscalaUsuario(STATE.anos)); renderizarPainelInconsistencias();       setTimeout(atualizarLarguraBarraRolagem, 150);     }      function irParaAnoCalendario(ano) {       if (!ano || !mainCalendar) return;       mainCalendar.gotoDate(ano + '-01-01');     }      function limparFiltrosCalendario() {       document.getElementById('calFilterEmployee').value = '';       document.getElementById('calFilterGroup').value = '';       document.getElementById('calFilterType').value = '';       document.getElementById('calFilterStatus').value = 'ATIVOS'; document.getElementById('calFilterInconsistency').value = '';       atualizarEventosCalendario();     }      /* ========================================================================      * ÁREA 1B: ESTATÍSTICAS (HEATMAP)      * ======================================================================== */     function renderizarEstatisticas() {              var operadores12h = STATE.funcionarios.filter(function(f) {         return /^Grupo [A-E]$/i.test(f.Grupo);       }).sort(function(a, b) {         if (a.Grupo !== b.Grupo) return a.Grupo.localeCompare(b.Grupo, 'pt-BR');         return a.Nome.localeCompare(b.Nome, 'pt-BR');       });        var totalPeriodos = 0;       var totaisMeses = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];        var linhasHtml = operadores12h.map(function(emp) {         var contagensMes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];          STATE.eventos.forEach(function(ev) {           if (ev.FuncionarioID !== emp.FuncionarioID) return;           if (ev.TipoEvento !== 'Férias' || ev.Situacao === 'Cancelada') return;           if (!ev.DataInicioISO) return;                      var mesIdx = parseInt(ev.DataInicioISO.slice(5, 7), 10) - 1;           {             if (mesIdx >= 0 && mesIdx < 12) contagensMes[mesIdx]++;           }         });          var somaEmp = contagensMes.reduce(function(a, b) { return a + b; }, 0);         totalPeriodos += somaEmp;         contagensMes.forEach(function(v, idx) { totaisMeses[idx] += v; });          var grpLetra = emp.Grupo.replace('Grupo ', '');         return '<tr>' +           '<td class="name">' + esc(emp.Nome) + ' <span class="muted">(' + esc(emp.FuncionarioID) + ')</span></td>' +           '<td>' + esc(grpLetra) + '</td>' +           contagensMes.map(function(v) {             var heatClass = v > 0 ? ' class="heat-' + Math.min(v, 5) + '"' : '';             return '<td' + heatClass + '>' + (v || '-') + '</td>';           }).join('') +           '<td><b>' + somaEmp + '</b></td>' +           '</tr>';       }).join('');        document.getElementById('statsSummary').innerHTML =         '<div><b>' + operadores12h.length + '</b><br>Operadores 12H</div>' +         '<div><b>' + totalPeriodos + '</b><br>Períodos de férias</div>' +         '<div><b>' + 'Todos os anos' + '</b><br>Período</div>';        document.getElementById('statsTable').innerHTML =         '<table class="std-table"><thead><tr>' +         '<th>Funcionário (Chave)</th><th>Grupo</th>' +         MONTH_NAMES.map(function(m) { return '<th>' + m.slice(0, 3) + '</th>'; }).join('') +         '<th>Total</th></tr></thead><tbody>' +         linhasHtml +         '<tr><th colspan="2">Total</th>' +         totaisMeses.map(function(v) { return '<th>' + (v || '-') + '</th>'; }).join('') +         '<th>' + totalPeriodos + '</th></tr></tbody></table>';     }      /* ========================================================================      * ÁREA 2: ESCALA ANUAL      * ======================================================================== */     function aoMudarAnoEscala(ano) {       if (annualCalendar && ano) {         annualCalendar.gotoDate(ano + '-01-01');       }       atualizarEscalaAnual();     }      function limparFiltrosEscala() {       document.getElementById('escFilterEmployee').value = '';       document.getElementById('escFilterGroup').value = '';       atualizarEscalaAnual();     }      function atualizarEscalaAnual() {       if (!annualCalendar) return;       var anoSelecionado = parseInt(document.getElementById('escFilterYear').value, 10) || 2026;       var empIdFiltro = document.getElementById('escFilterEmployee').value;       var grpFiltro = document.getElementById('escFilterGroup').value;       var empObjFiltro = empIdFiltro ? STATE.mapaFunc[empIdFiltro] : null;        var events = [];       var dt = new Date(Date.UTC(anoSelecionado, 0, 1, 12, 0, 0));       var dtFim = new Date(Date.UTC(anoSelecionado, 11, 31, 12, 0, 0));        while (dt <= dtFim) {         var dateISO = dt.toISOString().slice(0, 10);         var nextISO = addOneDayIso(dateISO);         var escDia = calcularEscalaDoDiaJS(dateISO);          var itensDoDia = [           { order: 0, title: 'Manhã: ' + escDia.manhaGrupo, color: escDia.corManha, grupo: 'Grupo ' + escDia.manhaGrupo },           { order: 1, title: 'Noite: ' + escDia.noiteGrupo, color: escDia.corNoite, grupo: 'Grupo ' + escDia.noiteGrupo },           { order: 2, title: escDia.etaNome, color: escDia.etaCor, grupo: escDia.etaGrupo, empNome: escDia.etaNome },           { order: 3, title: escDia.apoioManha, color: escDia.corApoioManha, grupo: 'Apoio Manhã' },           { order: 4, title: escDia.apoioNoite, color: escDia.corApoioNoite, grupo: 'Apoio Noite' }         ];          itensDoDia.forEach(function(item) {           if (grpFiltro && item.grupo !== grpFiltro) return;           if (empObjFiltro) {             var pertence = (empObjFiltro.Grupo === item.grupo) || (empObjFiltro.Nome === item.empNome);             if (!pertence) return;           }            events.push({             id: dateISO + '-' + item.order,             title: item.title,             start: dateISO,             end: nextISO,             allDay: true,             backgroundColor: item.color,             borderColor: item.color,             textColor: '#ffffff',             extendedProps: { displayOrder: item.order }           });         });          dt.setUTCDate(dt.getUTCDate() + 1);       }        annualCalendar.removeAllEvents();       annualCalendar.addEventSource(events.concat(obterEventosEscalaUsuario([anoSelecionado])));        var dtInspecao = document.getElementById('escDateInput').value || (anoSelecionado + '-10-15');       renderizarEscalaDoDia(dtInspecao);       setTimeout(atualizarLarguraBarraRolagem, 150);     }      function obterEventoAtivoDoFuncionarioNaData(funcId, dateISO) {       for (var i = 0; i < STATE.eventos.length; i++) {         var ev = STATE.eventos[i];         if (ev.FuncionarioID === funcId && ev.Situacao !== 'Cancelada') {           if (ev.DataInicioISO <= dateISO && ev.DataFimISO >= dateISO) {             return ev;           }         }       }       return null;     }      function renderizarEscalaDoDia(dateISO) {       if (!dateISO) return;       var partes = dateISO.split('-');       var dataBR = partes.length === 3 ? (partes[2] + '/' + partes[1] + '/' + partes[0]) : dateISO;       var escDia = calcularEscalaDoDiaJS(dateISO);        document.getElementById('dayTitle').textContent =         'Escala do Dia · ' + dataBR + ' (Manhã: Grupo ' + escDia.manhaGrupo + ' | Noite: Grupo ' + escDia.noiteGrupo + ')';        var linhas = [];        var opsManha = STATE.funcionarios.filter(function(f) {         return f.Grupo === ('Grupo ' + escDia.manhaGrupo);       }).sort(function(a, b) { return a.Nome.localeCompare(b.Nome, 'pt-BR'); });        opsManha.forEach(function(op) {         var evAtivo = obterEventoAtivoDoFuncionarioNaData(op.FuncionarioID, dateISO);         var sit = evAtivo ? (evAtivo.TipoEvento + ' (' + formatarSituacaoEOpcaoTabela(evAtivo) + ')') : 'Manhã (Turno 12h)';         linhas.push({           color: op.Cor || escDia.corManha,           name: op.Nome + ' (' + op.FuncionarioID + ' · ' + op.Grupo + ')',           situation: sit         });       });        var opsNoite = STATE.funcionarios.filter(function(f) {         return f.Grupo === ('Grupo ' + escDia.noiteGrupo);       }).sort(function(a, b) { return a.Nome.localeCompare(b.Nome, 'pt-BR'); });        opsNoite.forEach(function(op) {         var evAtivo = obterEventoAtivoDoFuncionarioNaData(op.FuncionarioID, dateISO);         var sit = evAtivo ? (evAtivo.TipoEvento + ' (' + formatarSituacaoEOpcaoTabela(evAtivo) + ')') : 'Noite (Turno 12h)';         linhas.push({           color: op.Cor || escDia.corNoite,           name: op.Nome + ' (' + op.FuncionarioID + ' · ' + op.Grupo + ')',           situation: sit         });       });        var opEta = STATE.funcionarios.find(function(f) { return f.Grupo === escDia.etaGrupo; });       var evEta = opEta ? obterEventoAtivoDoFuncionarioNaData(opEta.FuncionarioID, dateISO) : null;       linhas.push({         color: escDia.etaCor,         name: escDia.etaNome + ' (' + escDia.etaGrupo + ')',         situation: evEta ? (evEta.TipoEvento + ' (' + formatarSituacaoEOpcaoTabela(evEta) + ')') : 'Escala ETA (7x7)'       });        linhas.push({         color: escDia.corApoioManha,         name: escDia.apoioManha + ' (Apoio Manhã)',         situation: 'Apoio Manhã (12x36)'       });        linhas.push({         color: escDia.corApoioNoite,         name: escDia.apoioNoite + ' (Apoio Noite)',         situation: 'Apoio Noite (12x36)'       });        var container = document.getElementById('dayRows');       container.innerHTML = linhas.map(function(row) {         return '<div class="day-row">' +           '<span class="day-color" style="background:' + esc(row.color) + '"></span>' +           '<span class="day-name">' + esc(row.name) + '</span>' +           '<span class="day-situation">' + esc(row.situation) + '</span>' +           '</div>';       }).join('');     }      /* ========================================================================      * ÁREA 3A: FORMULÁRIO "NOVO EVENTO"      * ======================================================================== */     function estadoOpcaoVazio() {       var hoje = new Date().toISOString().slice(0, 10);       return { count: 1, periods: [{ start: hoje, days: 10, end: calcularDataFimPorDias(hoje, 10) }] };     }      function guardarEstadoOpcaoAtiva() {       var isFerias = document.getElementById('formEventType').value === 'Férias';       var st = STATE.optionStates[STATE.activeOption] || estadoOpcaoVazio();       st.count = isFerias ? Number(document.getElementById('periodCountSelect').value || 1) : 1;       st.periods = [];        var rows = document.querySelectorAll('#periodsContainer .period-item');       for (var i = 0; i < rows.length; i++) {         var s = rows[i].querySelector('[data-start]').value;         var d = Number(rows[i].querySelector('[data-days]').value || 1);         var e = calcularDataFimPorDias(s, d);         rows[i].querySelector('[data-end]').value = e;         st.periods.push({ start: s, days: d, end: e });       }       STATE.optionStates[STATE.activeOption] = st;     }      function aoMudarConfiguracaoFormNovo(resetar) {       var selTipo = document.getElementById('formEventType');       if (STATE.bloqueioFeriasAtivo && selTipo.value === 'Férias') {         selTipo.value = 'GPI';       }       var isFerias = selTipo.value === 'Férias';        if (resetar) {         STATE.optionStates = { 1: estadoOpcaoVazio() };         STATE.activeOption = 1;         document.getElementById('optionCountSelect').value = '1';         document.getElementById('periodCountSelect').value = '1';       }        document.getElementById('vacationOptionsFieldset').style.display = isFerias ? 'block' : 'none'; var ehDebito = selTipo.value === 'Débito'; document.getElementById('formDiasDebitoWrap').style.display = ehDebito ? 'block' : 'none'; document.getElementById('periodsContainer').closest('fieldset').style.display = ehDebito ? 'none' : ''; document.getElementById('formEventNotes').closest('.grid-2').style.display = ehDebito ? 'none' : '';       renderizarBotoesRadioOpcoes();       renderizarLinhasDePeriodo();     }      function aoMudarQuantidadeOpcoes() {       guardarEstadoOpcaoAtiva();       var qtdOpcoes = Number(document.getElementById('optionCountSelect').value || 1);       for (var op = 1; op <= qtdOpcoes; op++) {         if (!STATE.optionStates[op]) STATE.optionStates[op] = estadoOpcaoVazio();       }       Object.keys(STATE.optionStates).forEach(function(k) {         if (Number(k) > qtdOpcoes) delete STATE.optionStates[k];       });       if (STATE.activeOption > qtdOpcoes) STATE.activeOption = 1;       renderizarBotoesRadioOpcoes();       renderizarLinhasDePeriodo();     }      function aoMudarQuantidadePeriodos() {       guardarEstadoOpcaoAtiva();       renderizarLinhasDePeriodo();     }      function selecionarOpcaoRadio(numOpcao) {       guardarEstadoOpcaoAtiva();       STATE.activeOption = Number(numOpcao);       renderizarBotoesRadioOpcoes();       renderizarLinhasDePeriodo();     }      function renderizarBotoesRadioOpcoes() {       var isFerias = document.getElementById('formEventType').value === 'Férias';       var qtdOpcoes = isFerias ? Number(document.getElementById('optionCountSelect').value || 1) : 1;       var container = document.getElementById('optionsRadioContainer');       var html = '';       for (var op = 1; op <= qtdOpcoes; op++) {         html += '<label class="option-radio-card">' +           '<input type="radio" name="vacationOptionRadio" value="' + op + '"' +           (op === STATE.activeOption ? ' checked' : '') +           ' onchange="selecionarOpcaoRadio(' + op + ')"> Opção ' + op +           '</label>';       }       container.innerHTML = html;       document.getElementById('periodsLegendTitle').textContent =         isFerias ? ('Período(s) — Opção ' + STATE.activeOption) : 'Período do Evento';     }      function renderizarLinhasDePeriodo() {       var isFerias = document.getElementById('formEventType').value === 'Férias';       var st = STATE.optionStates[STATE.activeOption] || estadoOpcaoVazio();       var ehDebito = document.getElementById('formEventType').value === 'Débito'; var count = isFerias ? st.count : (ehDebito ? 0 : 1);       if (count > 0) document.getElementById('periodCountSelect').value = String(count);        var container = document.getElementById('periodsContainer');       var html = '';       for (var i = 0; i < count; i++) {         var p = st.periods[i] || { start: '', days: 10, end: '' };         var fimCalc = calcularDataFimPorDias(p.start, p.days || 1);         html += '<div class="period-item">' +           '<div class="period-start-row">' +           '<label>Data início *<input type="date" data-start="' + i + '" value="' + esc(p.start) + '" required oninput="atualizarDataFimLinha(this)"></label>' +           '<label>Quantidade de dias *<input type="number" data-days="' + i + '" min="1" max="365" step="1" value="' + esc(p.days || 1) + '" required oninput="atualizarDataFimLinha(this)"></label>' +           '<label>Data fim (calculada)<input type="date" data-end="' + i + '" value="' + esc(fimCalc) + '" readonly required></label>' +           '</div></div>';       }       container.innerHTML = html;     }      function atualizarDataFimLinha(inputEl) {       var box = inputEl.closest('.period-item');       var s = box.querySelector('[data-start]').value;       var d = Number(box.querySelector('[data-days]').value || 1);       box.querySelector('[data-end]').value = calcularDataFimPorDias(s, d);     }      function resetarFormularioNovoEvento() {       setTimeout(function() {         document.getElementById('formErrorAlert').classList.remove('show');         atualizarVisualToggleBloqueioFerias();         aoMudarConfiguracaoFormNovo(true);       }, 10);     }      function submeterNovoEventoMultiplo(ev) {       ev.preventDefault();       if (STATE.gravando) return;        guardarEstadoOpcaoAtiva();       var errBox = document.getElementById('formErrorAlert');       errBox.classList.remove('show');        var empId = document.getElementById('formEmployee').value;       var tipo = document.getElementById('formEventType').value;       var obs = tipo === 'Débito' ? '' : document.getElementById('formEventNotes').value;        if (!empId || !tipo) {         errBox.textContent = 'Selecione o funcionário e o tipo de evento.';         errBox.classList.add('show');         return;       }        if (tipo === 'Férias' && STATE.bloqueioFeriasAtivo) {         errBox.textContent = '🚫 O cadastro de novas Férias está bloqueado pelo Administrador. Selecione outro tipo de evento (GPI, Treinamento, Serviço ou Licença).';         errBox.classList.add('show');         return;       }        var isFerias = (tipo === 'Férias');       var qtdOpcoes = isFerias ? Number(document.getElementById('optionCountSelect').value || 1) : 1;       var periodosParaGravar = [];        for (var op = 1; op <= qtdOpcoes; op++) {         var st = STATE.optionStates[op] || estadoOpcaoVazio();         var numPer = isFerias ? st.count : (tipo === 'Débito' ? 0 : 1);         for (var idx = 0; idx < numPer; idx++) {           var p = st.periods[idx] || {};           if (!p.start || !p.end || p.start > p.end) {             errBox.textContent = 'Preencha datas válidas para a Opção ' + op + ' (Período ' + (idx + 1) + ').';             errBox.classList.add('show');             selecionarOpcaoRadio(op);             return;           }           periodosParaGravar.push({             DataInicio: p.start,             DataFim: p.end,             OpcaoFerias: isFerias ? String(op) : '',             Situacao: 'Planejada',             Observacao: obs           });         }       }        if (tipo === 'Débito') { var agoraDebito = new Date(); var hojeDebitoISO = agoraDebito.getFullYear() + '-' + String(agoraDebito.getMonth() + 1).padStart(2, '0') + '-' + String(agoraDebito.getDate()).padStart(2, '0'); periodosParaGravar.push({ DataInicio: hojeDebitoISO, DataFim: hojeDebitoISO, OpcaoFerias: '', Situacao: 'Planejada', Observacao: '' }); }
       var btn = document.getElementById('btnSubmitNovoEvento');       STATE.gravando = true;       btn.disabled = true;       btn.textContent = '⏳ Validando e gravando...';        var payload = {         FuncionarioID: empId,         TipoEvento: tipo,         Situacao: 'Planejada',         Observacao: obs,         OperadorResponsavel: obterNomeOperadorAtivo() || (STATE.mapaFunc[empId] ? STATE.mapaFunc[empId].Nome : 'Painel Web'),         DiasDebito: tipo === 'Débito' ? document.getElementById('formDiasDebito').value : '',
