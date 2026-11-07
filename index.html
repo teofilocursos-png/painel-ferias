@@ -15,14 +15,11 @@
       .efetivo-card { background: #ffffff; border: 1px solid var(--panel-border); border-left: 5px solid var(--green); border-radius: 6px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(25, 51, 43, 0.06); }
       .efetivo-card-valor { font-size: 26px; font-weight: 800; color: var(--ink); }
       .efetivo-card-rotulo { font-size: 12.5px; color: var(--muted); font-weight: 600; }
-      .efetivo-graficos-grid { display: grid; grid-template-columns: minmax(240px, 0.9fr) minmax(320px, 1.3fr) minmax(190px, 0.6fr); gap: 14px; align-items: stretch; margin-bottom: 14px; }
+      .efetivo-graficos-grid { display: grid; grid-template-columns: minmax(260px, 0.8fr) minmax(360px, 1.6fr); gap: 14px; align-items: stretch; margin-bottom: 14px; }
       .efetivo-bloco { background: #ffffff; border: 1px solid var(--panel-border); border-radius: 6px; padding: 10px 12px; min-width: 0; }
       .efetivo-bloco h4 { margin: 0 0 8px; font-size: 14px; color: var(--ink); }
       .efetivo-grafico { position: relative; height: 300px; }
-      .efetivo-operadores-scroll { max-height: 300px; overflow-y: auto; }
-      .efetivo-operadores { width: 100%; border-collapse: collapse; font-size: 13px; }
-      .efetivo-operadores th, .efetivo-operadores td { padding: 5px 6px; border-bottom: 1px solid #e5ece8; text-align: left; }
-      .efetivo-operadores thead th { background: #2e7d5b; color: #ffffff; position: sticky; top: 0; }
+      @media (max-width: 900px) { .efetivo-graficos-grid { grid-template-columns: 1fr; } }
       .secao-divisor { display: flex; align-items: center; gap: 12px; margin: 22px 0 14px; font-size: 12px; font-weight: 700; color: var(--green-dark); text-transform: uppercase; letter-spacing: 0.05em; }
       .secao-divisor::before, .secao-divisor::after { content: ""; flex: 1; height: 2px; background: linear-gradient(90deg, var(--green), #cbd8d1); }
       .secao-divisor::after { background: linear-gradient(90deg, #cbd8d1, var(--green)); }
@@ -246,16 +243,8 @@
           <div class="efetivo-bloco">
             <h4>Hora Extras (em dias)</h4>
             <div class="efetivo-grafico"><canvas id="horasExtrasChart"></canvas></div>
-            <p class="muted" style="margin:6px 0 0;">Dias de Treinamento e Serviço de cada operador no mês selecionado.</p>
-          </div>
-          <div class="efetivo-bloco">
-            <h4>Operadores do turno</h4>
-            <div class="efetivo-operadores-scroll">
-              <table class="efetivo-operadores">
-                <thead><tr><th>Operador</th><th>Grupo</th></tr></thead>
-                <tbody id="efetivoOperadoresTbody"></tbody>
-              </table>
-            </div>
+            <p class="muted" style="margin:6px 0 0;">Todos os operadores do turno, supervisores incluídos. Treinamento e Serviço são dias do mês selecionado.</p>
+            <p class="muted" style="margin:6px 0 0;">Débito aparece como saldo negativo: cada dia de Serviço realizado reduz o débito até zerar. Débitos não vencem e continuam nos meses seguintes.</p>
           </div>
         </div>
         <p id="efetivoChartAviso" class="muted"></p>
@@ -270,9 +259,9 @@
         <ul style="margin:4px 0 0 18px;padding:0;">
           <li>Cada dia tem duas linhas (Manhã 07:00–19:00 e Noite 19:00–07:00).</li>
           <li><b>Grupo Escalado</b> é o grupo de plantão naquele turno.</li>
-          <li><b>Operadores Disponíveis</b> são os operadores do grupo escalados para o turno (supervisor fora da contagem).</li>
+          <li><b>Operadores Disponíveis</b> são os operadores do grupo escalados para o turno (supervisor incluído na contagem).</li>
           <li><b>Ausência / Motivo</b> mostra quem está fora e o tipo de evento (de Férias, de Treinamento, no GPI etc.).</li>
-          <li><b>Status</b> é a quantidade de operadores disponíveis no turno.</li>
+          <li><b>Status</b> é a quantidade de operadores disponíveis no turno, incluindo o supervisor.</li>
           <li><b>Supervisores e Operadores</b> mostra o supervisor (ou interino) e a quantidade de operadores.</li>
         </ul>
         <div style="margin-top:6px;">
@@ -958,12 +947,57 @@
     }
 
     function operadoresTurnoEfetivo() {
-      var supervisores = Object.keys(SUPERVISOR_POR_GRUPO).map(function(g) { return SUPERVISOR_POR_GRUPO[g]; });
-      return (STATE.funcionarios || []).filter(function(f) {
-        return /^Grupo [A-E]$/i.test(f.Grupo || '') && supervisores.indexOf(f.FuncionarioID) === -1;
-      }).sort(function(a, b) {
-        return (a.Grupo || '').localeCompare(b.Grupo || '', 'pt-BR') || (a.Nome || '').localeCompare(b.Nome || '', 'pt-BR');
+      var mapaFunc = STATE.mapaFunc || {};
+      var lista = [];
+      var vistos = {};
+      Object.keys(SUPERVISOR_POR_GRUPO).sort().forEach(function(g) {
+        var grupoRotulo = 'Grupo ' + g;
+        var sup = mapaFunc[SUPERVISOR_POR_GRUPO[g]];
+        if (sup && !vistos[sup.FuncionarioID]) {
+          vistos[sup.FuncionarioID] = true;
+          lista.push({ FuncionarioID: sup.FuncionarioID, Nome: sup.Nome, Grupo: grupoRotulo });
+        }
+        (STATE.funcionarios || []).filter(function(f) {
+          return String(f.Grupo || '').trim() === grupoRotulo && !vistos[f.FuncionarioID];
+        }).sort(function(a, b) {
+          return (a.Nome || '').localeCompare(b.Nome || '', 'pt-BR');
+        }).forEach(function(f) {
+          vistos[f.FuncionarioID] = true;
+          lista.push({ FuncionarioID: f.FuncionarioID, Nome: f.Nome, Grupo: grupoRotulo });
+        });
       });
+      return lista;
+    }
+
+    function saldosDebitoAteMes(ano, mes) {
+      var mm = String(mes).padStart(2, '0');
+      var fimMes = isoParaUTC_(ano + '-' + mm + '-' + String(new Date(ano, mes, 0).getDate()).padStart(2, '0'));
+      var porFunc = {};
+      (STATE.eventos || []).forEach(function(ev) {
+        if (ev.Situacao === 'Cancelada' || !ev.DataInicioISO) return;
+        var id = ev.FuncionarioID;
+        if (ev.TipoEvento === 'Débito') {
+          var dataDebito = isoParaUTC_(ev.DataInicioISO);
+          if (dataDebito > fimMes) return;
+          (porFunc[id] = porFunc[id] || []).push({ dia: dataDebito, ordem: 0, delta: -(parseInt(ev.DiasDebito, 10) || 0) });
+        } else if (ev.TipoEvento === 'Serviço' && ev.DataFimISO) {
+          var a = isoParaUTC_(ev.DataInicioISO);
+          var b = Math.min(isoParaUTC_(ev.DataFimISO), fimMes);
+          for (var d = a; d <= b; d += 86400000) {
+            (porFunc[id] = porFunc[id] || []).push({ dia: d, ordem: 1, delta: 1 });
+          }
+        }
+      });
+      var saldos = {};
+      Object.keys(porFunc).forEach(function(id) {
+        var saldo = 0;
+        porFunc[id].sort(function(x, y) { return x.dia - y.dia || x.ordem - y.ordem; }).forEach(function(e) {
+          if (e.delta < 0) saldo += e.delta;
+          else if (saldo < 0) saldo = Math.min(0, saldo + 1);
+        });
+        saldos[id] = saldo;
+      });
+      return saldos;
     }
 
     function horasExtrasDoMes(ano, mes) {
@@ -987,12 +1021,7 @@
     function renderizarHorasExtrasEfetivo(ano, mes) {
       var operadores = operadoresTurnoEfetivo();
       var dias = horasExtrasDoMes(ano, mes);
-      var tbody = document.getElementById('efetivoOperadoresTbody');
-      if (tbody) {
-        tbody.innerHTML = operadores.length
-          ? operadores.map(function(f) { return '<tr><td>' + esc(primeiroNomeEfetivo(f.Nome)) + '</td><td>' + esc(f.Grupo) + '</td></tr>'; }).join('')
-          : '<tr><td colspan="2" class="muted">Nenhum operador cadastrado.</td></tr>';
-      }
+      var saldos = saldosDebitoAteMes(ano, mes);
       var canvas = document.getElementById('horasExtrasChart');
       if (!canvas) return;
       if (horasExtrasChartInstance) { horasExtrasChartInstance.destroy(); horasExtrasChartInstance = null; }
@@ -1002,6 +1031,7 @@
         data: {
           labels: operadores.map(function(f) { return primeiroNomeEfetivo(f.Nome); }),
           datasets: [
+            { label: 'Débito (saldo a compensar)', data: operadores.map(function(f) { return saldos[f.FuncionarioID] || 0; }), backgroundColor: '#2563eb' },
             { label: 'Treinamento', data: operadores.map(function(f) { return (dias[f.FuncionarioID] || {}).treinamento || 0; }), backgroundColor: '#f59e0b' },
             { label: 'Serviço', data: operadores.map(function(f) { return (dias[f.FuncionarioID] || {}).servico || 0; }), backgroundColor: '#16a34a' }
           ]
@@ -1010,7 +1040,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { position: 'bottom' } },
-          scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } }
+          scales: { x: { stacked: true }, y: { stacked: true, ticks: { precision: 0 } } }
         }
       });
     }
