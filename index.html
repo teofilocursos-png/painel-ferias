@@ -848,7 +848,7 @@
         else disponiveis.push(nome);
       });
 
-      var ehDiaCalculo = ehManha && new Date(iso + 'T00:00:00').getDay() >= 1 && new Date(iso + 'T00:00:00').getDay() <= 5; var comSuporteErivaldo = ehDiaCalculo;
+      var ehDiaCalculo = ehManha && new Date(iso + 'T00:00:00').getDay() >= 1 && new Date(iso + 'T00:00:00').getDay() <= 5; var comSuporteErivaldo = ehManha && new Date(iso + 'T00:00:00').getDay() >= 1 && new Date(iso + 'T00:00:00').getDay() <= 4;
       if (comSuporteErivaldo) disponiveis.push('Erivaldo (ADM)');
       var textoAusencia = ausencias.length ? ausencias.join(' - ') : 'Escala Padrão';
       if (comSuporteErivaldo) textoAusencia += ' - Suporte do Erivaldo';
